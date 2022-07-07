@@ -26,9 +26,8 @@ public class PersonController {
         return personService.registration(request);
     }
 
-    @GetMapping("/validation")
+    @PostMapping("/validation")
     public ValidationResponse validation(@RequestBody ValidationRequest request) {
         return personService.validation(request);
     }
-
 }
