@@ -1,6 +1,6 @@
 package com.example.task1.security;
 
-import com.example.task1.entity.User;
+import com.example.task1.entity.Person;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -54,7 +54,7 @@ public class SecurityUser implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
-    public static UserDetails fromUser(User user) {
+    public static UserDetails fromUser(Person user) {
         return new org.springframework.security.core.userdetails.User(
                 user.getNickname(),
                 user.getPassword(),

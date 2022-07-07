@@ -24,9 +24,10 @@ public class Animal {
     @Column
     private String name;
     @ManyToOne
-    @JoinColumn(name = "type_id")
+    @JoinColumn()
     private Type type;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private Person user;
+
 }

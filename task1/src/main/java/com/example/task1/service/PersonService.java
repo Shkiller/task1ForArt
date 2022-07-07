@@ -6,7 +6,7 @@ import com.example.task1.dto.response.LoginResponse;
 import com.example.task1.dto.response.ValidationResponse;
 
 
-public interface UserService {
+public interface PersonService {
     LoginResponse login(LoginRequest loginRequest);
     LoginResponse registration(LoginRequest loginRequest);
     ValidationResponse validation(ValidationRequest validationRequest);

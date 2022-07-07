@@ -5,14 +5,16 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
-@Table(name = "user")
+@Table(name = "person")
 @Getter
 @Setter
 @Accessors(chain = true)
-public class User {
+public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -22,9 +24,10 @@ public class User {
     @Column
     private String nickname;
 
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "user_id")
+    private List<Animal> animals = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "animal")
-    private Set<Animal> animals = new java.util.LinkedHashSet<>();
     public Role getRole()
     {
         return Role.USER;
