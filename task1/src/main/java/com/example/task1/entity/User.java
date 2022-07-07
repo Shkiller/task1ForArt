@@ -25,4 +25,9 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "animal")
     private Set<Animal> animals = new java.util.LinkedHashSet<>();
+    public Role getRole()
+    {
+        return Role.USER;
+    }
+
 }
