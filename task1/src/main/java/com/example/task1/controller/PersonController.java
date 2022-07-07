@@ -4,6 +4,7 @@ import com.example.task1.dto.request.LoginRequest;
 import com.example.task1.dto.request.ValidationRequest;
 import com.example.task1.dto.response.LoginResponse;
 import com.example.task1.dto.response.ValidationResponse;
+import com.example.task1.exception.NicknameAlreadyExist;
 import com.example.task1.service.PersonService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class PersonController {
     }
 
     @PostMapping("/registration")
-    public LoginResponse register(@RequestBody LoginRequest request) {
+    public LoginResponse register(@RequestBody LoginRequest request) throws NicknameAlreadyExist {
         return personService.registration(request);
     }
 

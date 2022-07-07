@@ -5,6 +5,7 @@ import com.example.task1.dto.request.ValidationRequest;
 import com.example.task1.dto.response.LoginResponse;
 import com.example.task1.dto.response.ValidationResponse;
 import com.example.task1.entity.Person;
+import com.example.task1.exception.NicknameAlreadyExist;
 import com.example.task1.repository.PersonRepository;
 import com.example.task1.service.PersonService;
 import lombok.AllArgsConstructor;
@@ -36,10 +37,10 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public LoginResponse registration(LoginRequest loginRequest) {
+    public LoginResponse registration(LoginRequest loginRequest) throws NicknameAlreadyExist {
         Person user = new Person();
         if (personRepository.findByNickname(loginRequest.getNickname()).isPresent())
-            throw new UsernameNotFoundException(loginRequest.getNickname());
+            throw new NicknameAlreadyExist();
         user.setNickname(loginRequest.getNickname())
                 .setPassword(new BCryptPasswordEncoder().encode(loginRequest.getPassword()));
         personRepository.save(user);

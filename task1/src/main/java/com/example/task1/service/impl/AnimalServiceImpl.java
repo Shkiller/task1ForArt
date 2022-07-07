@@ -4,6 +4,8 @@ import com.example.task1.dto.AnimalDTO;
 import com.example.task1.dto.response.ValidationResponse;
 import com.example.task1.entity.Animal;
 import com.example.task1.entity.Person;
+import com.example.task1.exception.AnimalNameExistException;
+import com.example.task1.exception.UserNotOwnAnimalException;
 import com.example.task1.repository.AnimalRepository;
 import com.example.task1.repository.PersonRepository;
 import com.example.task1.service.AnimalService;
@@ -26,7 +28,7 @@ public class AnimalServiceImpl implements AnimalService {
 
 
     @Override
-    public AnimalDTO put(AnimalDTO animalDTO, Principal principal) throws Exception {
+    public AnimalDTO put(AnimalDTO animalDTO, Principal principal) throws UserNotOwnAnimalException, AnimalNameExistException {
         Person currentPerson = getPerson(principal);
         Optional<Animal> animalOptional = animalRepository.findById(animalDTO.getId());
         if (animalOptional.isPresent()) {
@@ -35,10 +37,10 @@ public class AnimalServiceImpl implements AnimalService {
                         .setBirthday(animalDTO.getBirthday())
                         .setGender(animalDTO.getGender())
                         .setName(animalDTO.getName()));
-            else throw new Exception();
+            else throw new UserNotOwnAnimalException();
         } else {
             if (animalRepository.findByName(animalDTO.getName()).isPresent())
-               throw new UsernameNotFoundException("");
+               throw new AnimalNameExistException();
             animalRepository.save(new Animal()
                     .setBirthday(animalDTO.getBirthday())
                     .setGender(animalDTO.getGender())
@@ -49,13 +51,13 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public ValidationResponse delete(int id, Principal principal) throws Exception {
+    public ValidationResponse delete(int id, Principal principal) throws UserNotOwnAnimalException {
         Person currentPerson = getPerson(principal);
         Optional<Animal> animalOptional = animalRepository.findById(id);
         if (animalOptional.isPresent()) {
             if (currentPerson.equals(animalOptional.get().getPerson()))
                 animalRepository.delete(animalOptional.get());
-            else throw new Exception();
+            else throw new UserNotOwnAnimalException();
         }
         ValidationResponse validationResponse = new ValidationResponse();
         validationResponse.setStatus(true);
