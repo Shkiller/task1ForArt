@@ -2,3 +2,6 @@ databaseChangeLog:
   - include:
       file: 08-01-changelog.xml
       relativeToChangelogFile: true
+  - include:
+      file: 08-01-1-changelog.yaml
+      relativeToChangelogFile: true

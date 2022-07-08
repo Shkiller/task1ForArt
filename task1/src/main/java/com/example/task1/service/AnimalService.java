@@ -4,6 +4,7 @@ import com.example.task1.dto.AnimalDTO;
 import com.example.task1.dto.response.ValidationResponse;
 import com.example.task1.exception.AnimalNameExistException;
 import com.example.task1.exception.AnimalNotFoundException;
+import com.example.task1.exception.TypeNotExistException;
 import com.example.task1.exception.UserNotOwnAnimalException;
 
 import java.security.Principal;
@@ -18,7 +19,7 @@ public interface AnimalService {
      * @param principal - current user
      * @return - result animal
      */
-    AnimalDTO add(AnimalDTO animalDTO, Principal principal) throws AnimalNameExistException;
+    AnimalDTO add(AnimalDTO animalDTO, Principal principal) throws AnimalNameExistException, TypeNotExistException;
 
     /**
      * method for update animal
@@ -28,7 +29,7 @@ public interface AnimalService {
      * @param principal - current user
      * @return - result animal
      */
-    AnimalDTO update(AnimalDTO animalDTO, int id, Principal principal) throws UserNotOwnAnimalException, AnimalNotFoundException;
+    AnimalDTO update(AnimalDTO animalDTO, int id, Principal principal) throws UserNotOwnAnimalException, AnimalNotFoundException, TypeNotExistException;
 
     /**
      * method for delete animal

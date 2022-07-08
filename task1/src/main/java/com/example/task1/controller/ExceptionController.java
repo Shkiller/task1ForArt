@@ -50,4 +50,11 @@ public class ExceptionController {
                 .setDescription("Животное не найдено");
         return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(TypeNotExistException.class)
+    public ResponseEntity<ErrorDTO> handleTypeNotExistException(TypeNotExistException exc) {
+        ErrorDTO errorDTO = new ErrorDTO();
+        errorDTO.setCode(TYPE_NOT_EXIST.getCode())
+                .setDescription("Такого вида нет в базе");
+        return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
+    }
 }

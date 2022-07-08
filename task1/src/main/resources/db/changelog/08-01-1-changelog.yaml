@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2021101404
+      author: shkiller
+      changes:
+        - insert:
+            tableName: type
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: name
+                  value: "cat"
+        - insert:
+            tableName: type
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: name
+                  value: "dog"
+        - insert:
+            tableName: type
+            columns:
+              - column:
+                  name: id
+                  value: 3
+              - column:
+                  name: name
+                  value: "rat"

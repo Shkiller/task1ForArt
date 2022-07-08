@@ -4,11 +4,14 @@ import com.example.task1.dto.AnimalDTO;
 import com.example.task1.dto.response.ValidationResponse;
 import com.example.task1.entity.Animal;
 import com.example.task1.entity.Person;
+import com.example.task1.entity.Type;
 import com.example.task1.exception.AnimalNameExistException;
 import com.example.task1.exception.AnimalNotFoundException;
+import com.example.task1.exception.TypeNotExistException;
 import com.example.task1.exception.UserNotOwnAnimalException;
 import com.example.task1.repository.AnimalRepository;
 import com.example.task1.repository.PersonRepository;
+import com.example.task1.repository.TypeRepository;
 import com.example.task1.service.AnimalService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,30 +28,38 @@ public class AnimalServiceImpl implements AnimalService {
 
     private final PersonRepository personRepository;
     private final AnimalRepository animalRepository;
-
+    private final TypeRepository typeRepository;
 
     @Override
-    public AnimalDTO add(AnimalDTO animalDTO, Principal principal) throws AnimalNameExistException {
+    public AnimalDTO add(AnimalDTO animalDTO, Principal principal) throws AnimalNameExistException, TypeNotExistException {
         Person currentPerson = getPerson(principal);
+        Type type = null;
+        if (animalDTO.getType() != null)
+            type = typeRepository.findById(animalDTO.getType()).orElseThrow(TypeNotExistException::new);
         if (animalRepository.findByName(animalDTO.getName()).isPresent())
             throw new AnimalNameExistException();
         animalRepository.save(new Animal()
                 .setBirthday(animalDTO.getBirthday())
                 .setGender(animalDTO.getGender())
                 .setName(animalDTO.getName())
-                .setPerson(currentPerson));
+                .setPerson(currentPerson)
+                .setType(type));
         return animalDTO;
     }
 
     @Override
-    public AnimalDTO update(AnimalDTO animalDTO, int id, Principal principal) throws UserNotOwnAnimalException, AnimalNotFoundException {
+    public AnimalDTO update(AnimalDTO animalDTO, int id, Principal principal) throws UserNotOwnAnimalException, AnimalNotFoundException, TypeNotExistException {
         Person currentPerson = getPerson(principal);
+        Type type = null;
+        if (animalDTO.getType() != null)
+            type = typeRepository.findById(animalDTO.getType()).orElseThrow(TypeNotExistException::new);
         Animal animal = animalRepository.findById(id).orElseThrow(AnimalNotFoundException::new);
         if (currentPerson.equals(animal.getPerson()))
             animalRepository.save(animal
                     .setBirthday(animalDTO.getBirthday())
                     .setGender(animalDTO.getGender())
-                    .setName(animalDTO.getName()));
+                    .setName(animalDTO.getName())
+                    .setType(type));
         else throw new UserNotOwnAnimalException();
         return animalDTO;
     }
