@@ -5,6 +5,7 @@ import com.example.task1.dto.response.ValidationResponse;
 import com.example.task1.entity.Animal;
 import com.example.task1.entity.Person;
 import com.example.task1.exception.AnimalNameExistException;
+import com.example.task1.exception.AnimalNotFoundException;
 import com.example.task1.exception.UserNotOwnAnimalException;
 import com.example.task1.repository.AnimalRepository;
 import com.example.task1.repository.PersonRepository;
@@ -13,7 +14,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Optional;
@@ -28,25 +28,28 @@ public class AnimalServiceImpl implements AnimalService {
 
 
     @Override
-    public AnimalDTO put(AnimalDTO animalDTO, Principal principal) throws UserNotOwnAnimalException, AnimalNameExistException {
+    public AnimalDTO add(AnimalDTO animalDTO, Principal principal) throws UserNotOwnAnimalException, AnimalNameExistException {
         Person currentPerson = getPerson(principal);
-        Optional<Animal> animalOptional = animalRepository.findById(animalDTO.getId());
-        if (animalOptional.isPresent()) {
-            if (currentPerson.equals(animalOptional.get().getPerson()))
-                animalRepository.save(animalOptional.get()
-                        .setBirthday(animalDTO.getBirthday())
-                        .setGender(animalDTO.getGender())
-                        .setName(animalDTO.getName()));
-            else throw new UserNotOwnAnimalException();
-        } else {
-            if (animalRepository.findByName(animalDTO.getName()).isPresent())
-               throw new AnimalNameExistException();
-            animalRepository.save(new Animal()
+        if (animalRepository.findByName(animalDTO.getName()).isPresent())
+            throw new AnimalNameExistException();
+        animalRepository.save(new Animal()
+                .setBirthday(animalDTO.getBirthday())
+                .setGender(animalDTO.getGender())
+                .setName(animalDTO.getName())
+                .setPerson(currentPerson));
+        return animalDTO;
+    }
+
+    @Override
+    public AnimalDTO update(AnimalDTO animalDTO, int id, Principal principal) throws UserNotOwnAnimalException, AnimalNotFoundException {
+        Person currentPerson = getPerson(principal);
+        Animal animal = animalRepository.findById(id).orElseThrow(AnimalNotFoundException::new);
+        if (currentPerson.equals(animal.getPerson()))
+            animalRepository.save(animal
                     .setBirthday(animalDTO.getBirthday())
                     .setGender(animalDTO.getGender())
-                    .setName(animalDTO.getName())
-                    .setPerson(currentPerson));
-        }
+                    .setName(animalDTO.getName()));
+        else throw new UserNotOwnAnimalException();
         return animalDTO;
     }
 
@@ -72,20 +75,17 @@ public class AnimalServiceImpl implements AnimalService {
                 .add(new AnimalDTO()
                         .setName(animal.getName())
                         .setGender(animal.getGender())
-                        .setBirthday(animal.getBirthday())
-                        .setId(animal.getId())));
-
+                        .setBirthday(animal.getBirthday())));
         return animals;
     }
 
     @Override
-    public AnimalDTO getAnimal(int id) {
-        Animal animal = animalRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public AnimalDTO getAnimal(int id) throws AnimalNotFoundException {
+        Animal animal = animalRepository.findById(id).orElseThrow(AnimalNotFoundException::new);
         return new AnimalDTO()
                 .setName(animal.getName())
                 .setGender(animal.getGender())
-                .setBirthday(animal.getBirthday())
-                .setId(animal.getId());
+                .setBirthday(animal.getBirthday());
     }
 
     private Person getPerson(Principal principal) {

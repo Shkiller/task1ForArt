@@ -8,7 +8,6 @@ import java.time.LocalDate;
 @Data
 @Accessors(chain = true)
 public class AnimalDTO {
-    private Integer id;
     private LocalDate birthday;
     private String gender;
     private String name;

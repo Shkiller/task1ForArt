@@ -1,10 +1,7 @@
 package com.example.task1.controller;
 
 import com.example.task1.dto.ErrorDTO;
-import com.example.task1.exception.AnimalNameExistException;
-import com.example.task1.exception.NicknameAlreadyExist;
-import com.example.task1.exception.TooManyAuthAttemptsException;
-import com.example.task1.exception.UserNotOwnAnimalException;
+import com.example.task1.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -44,5 +41,13 @@ public class ExceptionController {
         errorDTO.setCode(TOO_MANY_AUTH_ATTEMPTS.getCode())
                 .setDescription("Превышено колличество попыток авторизации за час");
         return new ResponseEntity<>(errorDTO, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AnimalNotFoundException.class)
+    public ResponseEntity<ErrorDTO> handleAnimalNotFoundException(AnimalNotFoundException exc) {
+        ErrorDTO errorDTO = new ErrorDTO();
+        errorDTO.setCode(ANIMAL_NOT_FOUND.getCode())
+                .setDescription("Животное не найдено");
+        return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
 }

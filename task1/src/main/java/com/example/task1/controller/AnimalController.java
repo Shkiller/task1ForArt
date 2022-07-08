@@ -3,6 +3,7 @@ package com.example.task1.controller;
 import com.example.task1.dto.AnimalDTO;
 import com.example.task1.dto.response.ValidationResponse;
 import com.example.task1.exception.AnimalNameExistException;
+import com.example.task1.exception.AnimalNotFoundException;
 import com.example.task1.exception.UserNotOwnAnimalException;
 import com.example.task1.service.AnimalService;
 import lombok.AllArgsConstructor;
@@ -20,10 +21,16 @@ public class AnimalController {
 
     private final AnimalService animalService;
 
-    @PostMapping("/put")
+    @PostMapping("/add")
     @PreAuthorize("hasAuthority('user:write')")
-    public AnimalDTO put(@RequestBody AnimalDTO animalDTO, Principal principal) throws UserNotOwnAnimalException, AnimalNameExistException {
-        return animalService.put(animalDTO, principal);
+    public AnimalDTO add(@RequestBody AnimalDTO animalDTO, Principal principal) throws UserNotOwnAnimalException, AnimalNameExistException {
+        return animalService.add(animalDTO, principal);
+    }
+
+    @PostMapping("/update/{id}")
+    @PreAuthorize("hasAuthority('user:write')")
+    public AnimalDTO update(@RequestBody AnimalDTO animalDTO, @PathVariable int id, Principal principal) throws UserNotOwnAnimalException, AnimalNotFoundException {
+        return animalService.update(animalDTO, id, principal);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -40,7 +47,7 @@ public class AnimalController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('user:write')")
-    public AnimalDTO getAnimal(@PathVariable int id) throws Exception {
+    public AnimalDTO getAnimal(@PathVariable int id) throws AnimalNotFoundException {
         return animalService.getAnimal(id);
     }
 

@@ -38,6 +38,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public LoginResponse login(LoginRequest loginRequest, HttpServletRequest request) throws TooManyAuthAttemptsException {
 
+        //Check for Auth attempt
         List<Auth> auths = authRepository.findByIpAndTimestamp(request.getRemoteAddr(), LocalDateTime.now().minusHours(ATTEMPT_DELAY));
         if (auths.size() >= MAX_AUTH_ATTEMPT) {
             throw new TooManyAuthAttemptsException();
@@ -70,6 +71,8 @@ public class PersonServiceImpl implements PersonService {
         user.setNickname(loginRequest.getNickname())
                 .setPassword(new BCryptPasswordEncoder().encode(loginRequest.getPassword()));
         personRepository.save(user);
+
+        //User authenticate after registration
         Authentication auth = authenticationManager
                 .authenticate(
                         new UsernamePasswordAuthenticationToken(loginRequest.getNickname(), loginRequest.getPassword()));
