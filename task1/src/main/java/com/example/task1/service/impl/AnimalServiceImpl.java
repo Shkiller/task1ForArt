@@ -28,7 +28,7 @@ public class AnimalServiceImpl implements AnimalService {
 
 
     @Override
-    public AnimalDTO add(AnimalDTO animalDTO, Principal principal) throws UserNotOwnAnimalException, AnimalNameExistException {
+    public AnimalDTO add(AnimalDTO animalDTO, Principal principal) throws AnimalNameExistException {
         Person currentPerson = getPerson(principal);
         if (animalRepository.findByName(animalDTO.getName()).isPresent())
             throw new AnimalNameExistException();
@@ -54,17 +54,18 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public ValidationResponse delete(int id, Principal principal) throws UserNotOwnAnimalException {
+    public AnimalDTO delete(int id, Principal principal) throws UserNotOwnAnimalException, AnimalNotFoundException {
         Person currentPerson = getPerson(principal);
-        Optional<Animal> animalOptional = animalRepository.findById(id);
-        if (animalOptional.isPresent()) {
-            if (currentPerson.equals(animalOptional.get().getPerson()))
-                animalRepository.delete(animalOptional.get());
-            else throw new UserNotOwnAnimalException();
-        }
-        ValidationResponse validationResponse = new ValidationResponse();
-        validationResponse.setStatus(true);
-        return validationResponse;
+        Animal animal = animalRepository.findById(id).orElseThrow(AnimalNotFoundException::new);
+        if (currentPerson.equals(animal.getPerson()))
+            animalRepository.delete(animal);
+        else throw new UserNotOwnAnimalException();
+
+
+        return new AnimalDTO()
+                .setBirthday(animal.getBirthday())
+                .setGender(animal.getGender())
+                .setName(animal.getName());
     }
 
     @Override

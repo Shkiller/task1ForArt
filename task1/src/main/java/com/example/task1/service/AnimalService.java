@@ -18,7 +18,7 @@ public interface AnimalService {
      * @param principal - current user
      * @return - result animal
      */
-    AnimalDTO add(AnimalDTO animalDTO, Principal principal) throws UserNotOwnAnimalException, AnimalNameExistException;
+    AnimalDTO add(AnimalDTO animalDTO, Principal principal) throws AnimalNameExistException;
 
     /**
      * method for update animal
@@ -37,7 +37,7 @@ public interface AnimalService {
      * @param principal - current user
      * @return - deleted animal
      */
-    ValidationResponse delete(int id, Principal principal) throws UserNotOwnAnimalException;
+    AnimalDTO delete(int id, Principal principal) throws UserNotOwnAnimalException, AnimalNotFoundException;
 
     /**
      * method for get user animals

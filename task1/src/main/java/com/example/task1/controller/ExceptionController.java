@@ -39,7 +39,7 @@ public class ExceptionController {
     public ResponseEntity<ErrorDTO> handleTooManyAuthAttemptsException(TooManyAuthAttemptsException exc) {
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setCode(TOO_MANY_AUTH_ATTEMPTS.getCode())
-                .setDescription("Превышено колличество попыток авторизации за час");
+                .setDescription("Превышено количество попыток авторизации за час");
         return new ResponseEntity<>(errorDTO, HttpStatus.UNAUTHORIZED);
     }
 
