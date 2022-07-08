@@ -87,7 +87,8 @@ public class AnimalServiceImpl implements AnimalService {
                 .add(new AnimalDTO()
                         .setName(animal.getName())
                         .setGender(animal.getGender())
-                        .setBirthday(animal.getBirthday())));
+                        .setBirthday(animal.getBirthday())
+                        .setType(animal.getType() == null ? null : animal.getType().getId())));
         return animals;
     }
 
@@ -97,7 +98,8 @@ public class AnimalServiceImpl implements AnimalService {
         return new AnimalDTO()
                 .setName(animal.getName())
                 .setGender(animal.getGender())
-                .setBirthday(animal.getBirthday());
+                .setBirthday(animal.getBirthday())
+                .setType(animal.getType() == null ? null : animal.getType().getId());
     }
 
     private Person getPerson(Principal principal) {
