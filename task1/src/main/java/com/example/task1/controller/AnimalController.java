@@ -1,7 +1,6 @@
 package com.example.task1.controller;
 
 import com.example.task1.dto.AnimalDTO;
-import com.example.task1.dto.response.ValidationResponse;
 import com.example.task1.exception.AnimalNameExistException;
 import com.example.task1.exception.AnimalNotFoundException;
 import com.example.task1.exception.UserNotOwnAnimalException;
@@ -23,7 +22,7 @@ public class AnimalController {
 
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('user:write')")
-    public AnimalDTO add(@RequestBody AnimalDTO animalDTO, Principal principal) throws UserNotOwnAnimalException, AnimalNameExistException {
+    public AnimalDTO add(@RequestBody AnimalDTO animalDTO, Principal principal) throws  AnimalNameExistException {
         return animalService.add(animalDTO, principal);
     }
 
@@ -35,7 +34,7 @@ public class AnimalController {
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAuthority('user:write')")
-    public ValidationResponse delete(@PathVariable int id, Principal principal) throws UserNotOwnAnimalException {
+    public AnimalDTO delete(@PathVariable int id, Principal principal) throws UserNotOwnAnimalException, AnimalNotFoundException {
         return animalService.delete(id, principal);
     }
 
